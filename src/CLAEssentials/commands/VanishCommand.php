@@ -70,9 +70,9 @@ class VanishCommand extends BaseCommand{
 
         if(isset($args[0])){
             if(!in_array($player->getName(), $this->getAPI()->vanish)){
-                $this->getAPI()->setVanish($sender, true);
+                $this->getAPI()->setVanish($player, true);
             }elseif(in_array($player->getName(), $this->getAPI()->vanish)){
-                $this->getAPI()->setVanish($sender, false);
+                $this->getAPI()->setVanish($player, false);
             }
             return false;
         }
