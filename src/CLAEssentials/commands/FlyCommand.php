@@ -28,11 +28,11 @@ use pocketmine\utils\TextFormat;
 
 use CLAEssentials\API;
 
-class VanishCommand extends BaseCommand{
-
+class FlyCommand extends BaseCommand{
+    
     public function __construct(API $api){
-        parent::__construct("vanish", $api);
-        $this->setDescription("Turn your vanish mode on or off.");
+        parent::__construct("fly", $api);
+        $this->setDescription("Turn your flight on/off.");
     }
 
     /**
@@ -42,21 +42,19 @@ class VanishCommand extends BaseCommand{
      * @return bool
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args) : bool{
-        if(!$sender->hasPermission("clae.vanish")){
+        if(!$sender->hasPermission("clae.fly")){
             $sender->sendMessage(TextFormat::RED . "You don't have permission to do that.");
             return false;
         }
         if(!isset($args[0])){
             if(!$sender instanceof Player){
-                $sender->sendMessage("Usage: /vanish <player>");
+                $sender->sendMessage("Usage: /fly <player>");
                 return false;
             }
 
-            if(!in_array($sender->getName(), $this->getAPI()->vanish)){
-                $this->getAPI()->setVanish($sender, true);
-            }elseif(in_array($sender->getName(), $this->getAPI()->vanish)){
-                $this->getAPI()->setVanish($sender, false);
-            }
+            if($sender->isCreative()) return false;
+            $sender->setAllowFlight($sender->getAllowFlight() == false ? true : false);
+            $sender->sendMessage($sender->getAllowFlight() == false ? TextFormat::YELLOW . "You have activated your flight." : TextFormat::YELLOW . "You have disabled your flight.");
             return false;
         }
 
@@ -68,11 +66,10 @@ class VanishCommand extends BaseCommand{
         $player = $this->getServer()->getPlayer($args[0]);
 
         if(isset($args[0])){
-            if(!in_array($player->getName(), $this->getAPI()->vanish)){
-                $this->getAPI()->setVanish($player, true);
-            }elseif(in_array($player->getName(), $this->getAPI()->vanish)){
-                $this->getAPI()->setVanish($player, false);
-            }
+            if($player->isCreative()) return false;
+            $player->setAllowFlight($player->getAllowFlight() == false ? true : false);
+            $player->sendMessage($player->getAllowFlight() == false ? TextFormat::YELLOW . $sender->getName() . " has activated your flight." : TextFormat::YELLOW . $sender->getName() . " has disabled your flight.");
+            $sender->sendMessage(TextFormat::GREEN . "Changed " . $player->getName() . "flight!");
             return false;
         }
         return true;

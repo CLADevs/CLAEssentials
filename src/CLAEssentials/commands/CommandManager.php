@@ -28,7 +28,8 @@ class CommandManager{
 
     public function __construct(){
         $commands = [
-            new VanishCommand(API::getAPI())
+            new VanishCommand(API::getAPI()),
+            new FlyCommand(API::getAPI())
         ];
         API::getServer()->getCommandMap()->registerAll("CLAEssentials", $commands);
     }

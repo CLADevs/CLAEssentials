@@ -48,23 +48,24 @@ class API{
 		return self::getMain()->getServer();
 	}
 
-	public function isVanished($player){
-		if(!in_array($sender->getName(), $this->getAPI()->vanish)) return;
-	}
-
-	public function setVanish($player, bool $bool){
-		if($bool == true){
+	public function setVanish($player, bool $bool) : bool{
+		switch($bool){
+			case true:
 			$this->vanish[] = $player->getName();
 			$player->setDataFlag(Entity::DATA_FLAGS, Entity::DATA_FLAG_INVISIBLE, true);
 			$player->setNameTagVisible(false);
 			$player->sendMessage(TextFormat::YELLOW . $player->getName() . " has vanished!");
-		}
-
-		if($bool == false){
+			break;
+			case false;
 			unset($this->vanish[array_search($player->getName(), $this->vanish)]);
 			$player->setDataFlag(Entity::DATA_FLAGS, Entity::DATA_FLAG_INVISIBLE, false);
 			$player->setNameTagVisible(true);
 			$player->sendMessage(TextFormat::YELLOW . $player->getName() . " has unvanished!");
+			break;
+			default:
+			self::getMain()->getLogger()->error("setVanish must return true/false");
+			break;
 		}
+		return $bool;
 	}
 }
